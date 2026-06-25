@@ -415,4 +415,44 @@ class Collection extends BaseIterable
 
         return $this->item($min);
     }
+
+    public function flatten($depth = INF)
+    {
+        $result = array();
+
+        foreach ($this->toArray() as $item) {
+            $this->flattenItem($item, $result, $depth);
+        }
+
+        return new self($result);
+    }
+
+    private function flattenItem($item, &$result, $depth)
+    {
+        if ($depth === 0) {
+            $result[] = $item;
+            return;
+        }
+
+        if (is_array($item)) {
+
+            // 👇 si es array asociativo, NO lo rompas
+            if ($this->isAssoc($item)) {
+                $result[] = $item;
+                return;
+            }
+
+            // 👇 solo aplana listas
+            foreach ($item as $subItem) {
+                $this->flattenItem($subItem, $result, $depth - 1);
+            }
+        } else {
+            $result[] = $item;
+        }
+    }
+
+    private function isAssoc(array $array)
+    {
+        return array_keys($array) !== range(0, count($array) - 1);
+    }
 }

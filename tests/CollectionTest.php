@@ -19,6 +19,7 @@ class CollectionTest extends PHPUnit_Framework_TestCase
     {
         $this->authors = new Authors([
             [
+                'id' => 1,
                 'name' => 'Erick',
                 'age' => 50,
                 'publications' => [
@@ -37,6 +38,7 @@ class CollectionTest extends PHPUnit_Framework_TestCase
                 ]
             ],
             [
+                'id' => 2,
                 'name' => 'Jorge pedroza',
                 'age' => 30,
                 'publications' => [
@@ -51,6 +53,7 @@ class CollectionTest extends PHPUnit_Framework_TestCase
                 ]
             ],
             [
+                'id' => 3,
                 'name' => 'Manuel Tavarez',
                 'age' => 40,
                 'publications' => [
@@ -61,6 +64,7 @@ class CollectionTest extends PHPUnit_Framework_TestCase
                 ]
             ],
             [
+                'id' => 4,
                 'name' => 'Mónica García',
                 'age' => 20,
                 'publications' => [
@@ -119,50 +123,26 @@ class CollectionTest extends PHPUnit_Framework_TestCase
 
     public function testWhere()
     {
-        // $result = $this->authors->where('publications', '>', 30);
+        $result = $this->authors->pluck('publications')->flatten()->where('rating', '>', 5);
+        $this->assertEquals(3, $result->count());
     }
 
     public function testWhereIn()
     {
-        $data = array(
-            array('id' => 1),
-            array('id' => 2),
-            array('id' => 3)
-        );
 
-        $c = new Collection($data);
-
-        $result = $c->whereIn('id', array(1, 3));
+        $result = $this->authors->whereIn('id', array(1, 3));
 
         $this->assertEquals(2, $result->count());
     }
 
     public function testSortBy()
     {
-        $data = array(
-            array('age' => 30),
-            array('age' => 10),
-            array('age' => 20)
-        );
-
-        $c = new Collection($data);
-
-        $sorted = $c->sortBy('age');
-
-        $this->assertEquals(10, $sorted->toArray()[0]['age']);
+        $this->assertEquals(20, $this->authors->sortBy('age')->first()['age']);
     }
 
     public function testSum()
     {
-        $data = array(
-            array('price' => 10),
-            array('price' => 20),
-            array('price' => 30)
-        );
-
-        $c = new Collection($data);
-
-        $this->assertEquals(60, $c->sum('price'));
+        $this->assertEquals(140, $this->authors->sum('age'));
     }
 
     public function testUnique()

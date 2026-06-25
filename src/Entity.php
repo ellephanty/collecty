@@ -2,13 +2,14 @@
 
 namespace Ellephanty\Collecty;
 
-class Entity
+use ArrayAccess;
+
+class Entity implements ArrayAccess
 {
     protected $object;
 
     public function __construct($object = null)
     {
-        // 🔥 NORMALIZACIÓN TOTAL (clave del fix)
         if (is_array($object)) {
             $object = (object) $object;
         }
@@ -16,21 +17,17 @@ class Entity
         $this->object = $object;
     }
 
+    // =====================
+    // Object access ->age
+    // =====================
     public function __get($property)
     {
-        // caso object
         if (is_object($this->object)) {
-
-            if (isset($this->object->$property)) {
-                return $this->object->$property;
-            }
-
-            return null;
+            return $this->object->$property ? $this->object->$property : null;
         }
 
-        // caso array fallback (por seguridad)
-        if (is_array($this->object) && isset($this->object[$property])) {
-            return $this->object[$property];
+        if (is_array($this->object)) {
+            return $this->object[$property] ? $this->object[$property] : null;
         }
 
         return null;
@@ -49,6 +46,62 @@ class Entity
         return false;
     }
 
+    // =====================
+    // Array access ['age']
+    // =====================
+    public function offsetExists($offset)
+    {
+        if (is_object($this->object)) {
+            return isset($this->object->$offset);
+        }
+
+        if (is_array($this->object)) {
+            return isset($this->object[$offset]);
+        }
+
+        return false;
+    }
+
+    public function offsetGet($offset)
+    {
+        if (is_object($this->object)) {
+            return $this->object->$offset ? $this->object->$offset : null;
+        }
+
+        if (is_array($this->object)) {
+            return $this->object[$offset] ? $this->object[$offset] : null;
+        }
+
+        return null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        if (is_object($this->object)) {
+            $this->object->$offset = $value;
+            return;
+        }
+
+        if (is_array($this->object)) {
+            $this->object[$offset] = $value;
+        }
+    }
+
+    public function offsetUnset($offset)
+    {
+        if (is_object($this->object)) {
+            unset($this->object->$offset);
+            return;
+        }
+
+        if (is_array($this->object)) {
+            unset($this->object[$offset]);
+        }
+    }
+
+    // =====================
+    // helpers
+    // =====================
     public function toJSON()
     {
         return $this->object;
