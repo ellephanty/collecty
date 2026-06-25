@@ -15,6 +15,8 @@ class Authors extends Collection
 
 class CollectionTest extends PHPUnit_Framework_TestCase
 {
+    protected $authors;
+
     protected function setUp()
     {
         $this->authors = new Authors([
