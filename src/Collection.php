@@ -451,6 +451,19 @@ class Collection extends BaseIterable
         }
     }
 
+    public function transform($callback)
+    {
+        $items = [];
+
+        foreach ($this->toArray() as $item) {
+            $items[] = $callback($this->item($item));
+        }
+
+        $this->set($items);
+
+        return $this;
+    }
+
     private function isAssoc(array $array)
     {
         return array_keys($array) !== range(0, count($array) - 1);

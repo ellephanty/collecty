@@ -147,6 +147,17 @@ class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(140, $this->authors->sum('age'));
     }
 
+    public function testTransform()
+    {
+
+        $this->authors->transform(function ($author) {
+            $author->totalPublications = count($author->publications);
+            return $author;
+        });
+
+        $this->assertEquals(7, $this->authors->sum('totalPublications'));
+    }
+
     public function testUnique()
     {
         $data = array(1, 1, 2, 3, 3);
