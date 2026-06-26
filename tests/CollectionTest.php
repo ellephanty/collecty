@@ -147,6 +147,11 @@ class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(140, $this->authors->sum('age'));
     }
 
+    public function testTake()
+    {
+        $this->assertEquals(2, $this->authors->take(2)->count());
+    }
+
     public function testTransform()
     {
 
@@ -206,7 +211,8 @@ class CollectionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(30, $this->authors->get(1)->age);
     }
 
-    public function testConcat(){
+    public function testConcat()
+    {
 
         $this->authors->concat([
             [

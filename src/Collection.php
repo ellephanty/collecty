@@ -58,6 +58,15 @@ class Collection extends BaseIterable
         return false;
     }
 
+    public function take($limit){
+        return $this->slice(0, $limit);
+    }
+
+    public function slice($start, $end){
+        $array = $this->toArray();
+        return new self(array_slice($array, $start, $end));
+    }
+
     public function count()
     {
         return count($this->toArray());
