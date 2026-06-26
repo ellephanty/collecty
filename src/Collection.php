@@ -39,6 +39,10 @@ class Collection extends BaseIterable
 
     public function concat($array)
     {
+        if (is_object($array) && method_exists($array, 'toArray')) {
+            $array = $array->toArray();
+        }
+
         $this->set(array_merge($this->toArray(), $array));
         return $this;
     }

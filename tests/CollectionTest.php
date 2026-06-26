@@ -205,4 +205,35 @@ class CollectionTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(30, $this->authors->get(1)->age);
     }
+
+    public function testConcat(){
+
+        $this->authors->concat([
+            [
+                'name' => 'Cristian',
+                'age' => 20
+            ],
+            [
+                'name' => 'Jorge pedroza',
+                'age' => 30
+            ],
+            [
+                'name' => 'Manuel Tavarez',
+                'age' => 40
+            ],
+            [
+                'name' => 'Erick',
+                'age' => 50
+            ]
+        ]);
+
+        $this->authors->concat(new Collection([
+            [
+                'name' => 'Cristian',
+                'age' => 20
+            ]
+        ]));
+
+        $this->assertEquals(9, $this->authors->count());
+    }
 }
